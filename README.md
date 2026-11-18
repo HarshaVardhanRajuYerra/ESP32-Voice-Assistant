@@ -1,219 +1,188 @@
-# ESP32-Voice-Assistant
-An ESP32-based AI voice assistant project using an INMP441 digital microphone, MAX98357A audio amplifier, speaker, and OLED display.  The objective is to build a voice-interactive chatbot capable of capturing audio, processing voice input, generating audio responses, and displaying information on an OLED screen.
-# 🤖 ESP32 AI Voice Assistant
+# 🤖 CHATBOT A.I XIAOZHI – ESP32 Voice Assistant
 
-An ESP32-based AI voice assistant project using an INMP441 digital microphone, MAX98357A audio amplifier, speaker, and OLED display.
-
-The objective is to build a voice-interactive chatbot capable of capturing audio, processing voice input, generating audio responses, and displaying information on an OLED screen.
+An ESP32-based voice assistant prototype using an INMP441 digital microphone, MAX98357A audio amplifier, speaker, and 0.96-inch OLED display.
 
 ## 📸 Hardware Wiring Diagram
 
+![XIAOZHI ESP32 Voice Assistant wiring diagram](docs/wiring-diagram.png)
 
+> This is the reference wiring image supplied for the project. Verify every pin against your actual modules and firmware before applying power.
 
 ## 🔧 Hardware Components
 
-| Component       | Description                              |    Quantity |
-| --------------- | ---------------------------------------- | ----------: |
-| ESP32 DevKit V1 | ESP32-WROOM-32, 30-pin development board |           1 |
-| INMP441         | I2S digital microphone                   |           1 |
-| MAX98357A       | I2S audio amplifier                      |           1 |
-| Speaker         | 4Ω, 3W speaker                           |           1 |
-| OLED Display    | 0.96-inch, 128×64 I2C display            |           1 |
-| LED             | Status indicator LED                     |           1 |
-| Resistor        | 220Ω                                     |           1 |
-| Jumper Wires    | Male-to-female / male-to-male            | As required |
+| Component | Description | Quantity |
+|---|---|---:|
+| ESP32 DevKit V1 | ESP32-WROOM-32, 30-pin development board | 1 |
+| INMP441 | I2S digital microphone | 1 |
+| MAX98357A | I2S audio amplifier | 1 |
+| Speaker | 4Ω, 3W speaker | 1 |
+| OLED display | 0.96-inch, 128×64, I2C | 1 |
+| LED | Status indicator | 1 |
+| Resistor | 220Ω | 1 |
+| Jumper wires | Male-to-female / male-to-male | As required |
 
 ## 🔌 GPIO Pin Configuration
 
-The following table represents the proposed connections shown in the wiring diagram.
+The following assignments are transcribed from the supplied wiring diagram. Confirm them against your board, module labels, and firmware before connecting.
 
 ### 1. INMP441 – Digital Microphone
 
-The INMP441 captures voice input and sends digital audio data to the ESP32 through the I2S interface.
+| INMP441 pin | ESP32 connection | Function |
+|---|---|---|
+| VDD | 3V3 | Power |
+| GND | GND | Ground |
+| SD | GPIO 32 | Microphone data |
+| WS | GPIO 25 | Word select |
+| SCK | GPIO 26 | Serial clock |
+| L/R | GND | Left-channel selection |
 
-| INMP441 Pin | ESP32 Pin | Connection             |
-| ----------- | --------- | ---------------------- |
-| VDD         | 3V3       | Power                  |
-| GND         | GND       | Ground                 |
-| SD          | GPIO 32   | Audio Data             |
-| WS          | GPIO 25   | Word Select            |
-| SCK         | GPIO 26   | Serial Clock           |
-| L/R         | GND       | Left Channel Selection |
-
-**Important:** The microphone must be powered using 3.3V, not 5V.
+**Power note:** Use 3.3V for INMP441 VDD.
 
 ### 2. MAX98357A – Audio Amplifier
 
-The MAX98357A receives digital audio from the ESP32 and amplifies it to drive the speaker.
-
-| MAX98357A Pin | ESP32 Pin | Connection       |
-| ------------- | --------- | ---------------- |
-| VIN           | 3V3       | Power            |
-| GND           | GND       | Ground           |
-| SD            | 3V3       | Amplifier Enable |
-| DIN           | GPIO 33   | Audio Data       |
-| BCLK          | GPIO 14   | Bit Clock        |
-| LRC           | GPIO 27   | Word Select      |
+| MAX98357A pin | ESP32 connection | Function |
+|---|---|---|
+| VIN | 3V3 (as drawn; verify supply requirements) | Power |
+| GND | GND | Ground |
+| SD | 3V3 (as drawn) | Shutdown/enable |
+| DIN | GPIO 33 | Audio data |
+| BCLK | GPIO 14 | Bit clock |
+| LRC | GPIO 27 | Word-select clock |
 
 **Speaker connections:**
+- Speaker (+) → MAX98357A `SPK+`
+- Speaker (−) → MAX98357A `SPK−`
 
-- Speaker (+) → MAX98357A SPK+
-- Speaker (−) → MAX98357A SPK−
+Do **not** connect either speaker output to ESP32 GND. The speaker connects to the amplifier, not directly to ESP32 GPIO pins.
 
-Do not connect either speaker terminal directly to ESP32 GND.
+### 3. OLED Display – 0.96-inch, 128×64
 
-### 3. OLED Display – 0.96 Inch
-
-The OLED uses I2C communication to display chatbot status and information.
-
-| OLED Pin | ESP32 Pin | Connection |
-| -------- | --------- | ---------- |
-| GND      | GND       | Ground     |
-| VCC      | 3V3       | Power      |
-| SCL      | GPIO 15   | I2C Clock  |
-| SDA      | GPIO 4    | I2C Data   |
-
-Display specifications:
-
-- Display size: 0.96 inch
-- Resolution: 128 × 64 pixels
-- Interface: I2C
+| OLED pin | ESP32 connection | Function |
+|---|---|---|
+| GND | GND | Ground |
+| VCC | 3V3 | Power |
+| SCL | GPIO 15 | I2C clock |
+| SDA | GPIO 4 | I2C data |
 
 ### 4. LED – Status Indicator
 
-| LED Connection         | ESP32 Connection              |
-| ---------------------- | ----------------------------- |
-| Anode (+), long leg    | GPIO 18 through 220Ω resistor |
-| Cathode (−), short leg | GND                           |
+| LED connection | ESP32 connection |
+|---|---|
+| Anode (+), long leg | GPIO 18 through a 220Ω resistor |
+| Cathode (−), short leg | GND |
 
-The resistor limits current and protects the LED.
+The resistor limits current through the LED.
 
----
+## ⚫ Stage 1 – Ground (Black-Wire) Connections
 
-## ⚫ Ground Connections – First Connection Stage
+Start with black wires only. Keep the ESP32 disconnected from USB and external power while wiring.
 
-The first stage of hardware assembly is connecting all the black wires.
+| Component | Ground connection | Connect to |
+|---|---|---|
+| INMP441 | GND | ESP32 GND |
+| MAX98357A | GND | ESP32 GND |
+| OLED | GND | ESP32 GND |
+| LED | Cathode (−) | ESP32 GND |
+| Speaker | No system-ground connection | Connect only to MAX98357A `SPK+` and `SPK−` |
 
-All modules must share a common ground with the ESP32.
+### Ground wiring steps
 
-| Component | Ground Pin        | Connect To     |
-| --------- | ----------------- | -------------- |
-| INMP441   | GND               | ESP32 GND      |
-| MAX98357A | GND               | ESP32 GND      |
-| OLED      | GND               | ESP32 GND      |
-| LED       | Cathode (−)       | ESP32 GND      |
-| Speaker   | No GND connection | MAX98357A SPK− |
-
-### Ground Connection Procedure
-
-1. Identify the GND pin on the ESP32.
+1. Locate a GND pin on the ESP32.
 2. Connect INMP441 GND to ESP32 GND.
 3. Connect MAX98357A GND to ESP32 GND.
 4. Connect OLED GND to ESP32 GND.
 5. Connect the LED cathode to ESP32 GND.
-6. Verify all ground connections.
+6. Recheck that no ground wire is connected to a power pin.
 
-A breadboard's common negative rail can be used to distribute GND to all modules.
+A breadboard's common negative rail can distribute GND if that rail is connected to ESP32 GND.
 
-**Safety:** Do not power the circuit until the connections have been checked.
+**Important:** The speaker's `SPK−` terminal is an amplifier output, not system GND.
 
-## 🔴 Power Connections – Second Connection Stage
+## 🔴 Stage 2 – Power Connections
 
-After completing and checking the ground connections, connect the power wires.
+After checking the ground wiring, add power connections.
 
-| Component | Power Pin | ESP32 Connection                      |
-| --------- | --------- | ------------------------------------- |
-| INMP441   | VDD       | 3V3                                   |
-| MAX98357A | VIN       | 3V3 (subject to current requirements) |
-| OLED      | VCC       | 3V3                                   |
-| MAX98357A | SD        | 3V3                                   |
+| Component | Power pin | Proposed connection in diagram |
+|---|---|---|
+| INMP441 | VDD | ESP32 3V3 |
+| MAX98357A | VIN | ESP32 3V3 (verify current and supply requirements first) |
+| MAX98357A | SD | 3V3 |
+| OLED | VCC | ESP32 3V3 |
 
-Check the module specifications and power requirements before powering the complete circuit.
+Do not assume the ESP32 3.3V regulator can supply the amplifier's peak current. Use an appropriate regulated supply if required, connect supply grounds together, and check the exact breakout-board documentation.
 
-## 🟡 Signal Connections – Third Connection Stage
+## 🟡 Stage 3 – Signal Connections
 
-Connect the communication and control wires according to the GPIO configuration.
+| Signal | ESP32 GPIO |
+|---|---:|
+| INMP441 SD | GPIO 32 |
+| INMP441 WS | GPIO 25 |
+| INMP441 SCK | GPIO 26 |
+| MAX98357A DIN | GPIO 33 |
+| MAX98357A BCLK | GPIO 14 |
+| MAX98357A LRC | GPIO 27 |
+| OLED SCL | GPIO 15 |
+| OLED SDA | GPIO 4 |
+| LED control | GPIO 18 |
 
-| Signal         | GPIO |
-| -------------- | ---: |
-| INMP441 SD     |   32 |
-| INMP441 WS     |   25 |
-| INMP441 SCK    |   26 |
-| MAX98357A DIN  |   33 |
-| MAX98357A BCLK |   14 |
-| MAX98357A LRC  |   27 |
-| OLED SCL       |   15 |
-| OLED SDA       |    4 |
-| LED            |   18 |
+## 🧪 Hardware Testing Checklist
 
-## 🧪 Hardware Testing Plan
-
-Test each component separately before running the complete chatbot firmware.
-
-- [ ] Verify ESP32 power and USB connection.
+- [ ] Inspect all wiring with power disconnected.
 - [ ] Verify common GND connections.
-- [ ] Test OLED display initialization.
-- [ ] Test INMP441 microphone audio capture.
+- [ ] Power and initialize the OLED.
+- [ ] Test INMP441 microphone capture.
 - [ ] Test MAX98357A audio output.
-- [ ] Test 4Ω 3W speaker.
-- [ ] Test LED status indicator.
-- [ ] Verify microphone and speaker operation together.
-- [ ] Integrate all components with XIAOZHI firmware.
+- [ ] Test the 4Ω, 3W speaker at a safe volume.
+- [ ] Test the LED through its 220Ω resistor.
+- [ ] Test microphone input and speaker output together.
+- [ ] Confirm firmware GPIO settings match the physical wiring.
+- [ ] Integrate and test the complete voice assistant.
 
-## ⚠️ Important Hardware Notes
+## ⚠️ Safety and Compatibility Notes
 
-1. Never reverse VCC and GND.
-2. Never connect the INMP441 VDD to 5V.
-3. Always use a common ground for the modules.
-4. Never connect the speaker directly to ESP32 GPIO pins.
-5. Never connect the MAX98357A speaker outputs to GND.
-6. Check the actual GPIO labels on your ESP32 board before connecting wires.
-7. Verify that the firmware GPIO configuration matches the physical connections.
-8. Ensure the power supply can handle the amplifier's current requirements.
+1. Disconnect USB and external power before changing wiring.
+2. Never reverse VCC and GND.
+3. Power the INMP441 from 3.3V, not 5V.
+4. All modules must share a common system ground.
+5. Do not connect the speaker directly to ESP32 GPIO pins.
+6. Do not connect MAX98357A `SPK+` or `SPK−` to GND.
+7. Check the actual GPIO labels on your ESP32 board.
+8. Confirm firmware pin configuration matches the wiring.
+9. Verify the amplifier board's supply-voltage and current requirements before powering it.
 
-## 📁 Suggested GitHub Repository Structure
+## 📁 Repository Structure
 
 ```text
 XIAOZHI-ESP32-VOICE-ASSISTANT/
-│
 ├── docs/
-│   ├── wiring-diagram.png
-│   ├── components.md
-│   └── connection-guide.md
-│
+│   └── wiring-diagram.png
 ├── firmware/
 │   └── README.md
-│
 ├── images/
-│   ├── esp32-board.jpg
-│   ├── microphone.jpg
-│   ├── amplifier.jpg
-│   └── oled-display.jpg
-│
 ├── README.md
 └── LICENSE
 ```
 
-## 🚀 Project Development Roadmap
+## 🚀 Development Roadmap
 
-- [ ] Hardware component selection
-- [ ] Initial wiring diagram
-- [ ] Ground connections
-- [ ] Power connections
-- [ ] Signal connections
-- [ ] Individual component testing
-- [ ] I2S microphone integration
-- [ ] Audio amplifier integration
-- [ ] OLED interface integration
-- [ ] AI chatbot integration
-- [ ] Complete voice assistant testing
+- [x] Select the main hardware components
+- [x] Prepare the initial wiring reference
+- [ ] Complete ground connections
+- [ ] Complete and verify power connections
+- [ ] Complete signal connections
+- [ ] Test each module independently
+- [ ] Integrate I2S microphone
+- [ ] Integrate audio amplifier and speaker
+- [ ] Integrate OLED display
+- [ ] Integrate AI chatbot backend
+- [ ] Test the complete voice assistant
 
 ## 🎯 Project Goal
 
-Build a compact AI voice assistant using ESP32 hardware that can listen to user voice input, communicate with an AI backend, and respond through a speaker while displaying relevant information on an OLED screen.
+Build a compact ESP32-based AI voice assistant that can listen to a user, send voice input for AI processing, respond through a speaker, and display useful status information on an OLED screen.
 
-**Project Name:** BUDDY
-**Controller:** ESP32 DevKit V1 (ESP32-WROOM-32)
-**Audio Input:** INMP441
-**Audio Output:** MAX98357A + 4Ω 3W Speaker
+**Project name:** CHATBOT A.I XIAOZHI  
+**Controller:** ESP32 DevKit V1 (ESP32-WROOM-32)  
+**Audio input:** INMP441  
+**Audio output:** MAX98357A + 4Ω, 3W speaker  
 **Display:** 0.96-inch OLED, 128×64
