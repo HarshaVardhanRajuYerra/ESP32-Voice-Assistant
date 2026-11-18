@@ -4,7 +4,8 @@ An ESP32-based voice assistant prototype using an INMP441 digital microphone, MA
 
 ## 📸 Hardware Wiring Diagram
 
-![XIAOZHI ESP32 Voice Assistant wiring diagram](docs/wiring-diagram.png)
+<img width="1395" height="873" alt="IM" src="https://github.com/user-attachments/assets/3e7778a9-8c34-4b5a-aaf2-7011e8379625" />
+
 
 > This is the reference wiring image supplied for the project. Verify every pin against your actual modules and firmware before applying power.
 
