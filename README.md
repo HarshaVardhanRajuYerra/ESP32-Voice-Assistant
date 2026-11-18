@@ -192,3 +192,4 @@ Build a compact ESP32-based AI voice assistant that can listen to a user, send v
 **Audio input:** INMP441  
 **Audio output:** MAX98357A + 4Ω, 3W speaker  
 **Display:** 0.96-inch OLED, 128×64
+**Created BY :** Harsha vardhan raju yerra
