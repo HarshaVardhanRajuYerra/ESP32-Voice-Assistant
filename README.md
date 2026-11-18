@@ -25,6 +25,7 @@ An ESP32-based voice assistant prototype using an INMP441 digital microphone, MA
 ## 🔌 GPIO Pin Configuration
 
 The following assignments are transcribed from the supplied wiring diagram. Confirm them against your board, module labels, and firmware before connecting.
+<img width="750" height="500" alt="MIC" src="https://github.com/user-attachments/assets/9ba1b0a5-a118-442e-b30b-424ce9bf82dd" />
 
 ### 1. INMP441 – Digital Microphone
 
@@ -40,6 +41,7 @@ The following assignments are transcribed from the supplied wiring diagram. Conf
 **Power note:** Use 3.3V for INMP441 VDD.
 
 ### 2. MAX98357A – Audio Amplifier
+<img width="750" height="422" alt="AMP" src="https://github.com/user-attachments/assets/7bdc2b1f-4466-4263-85f0-66159310733e" />
 
 | MAX98357A pin | ESP32 connection | Function |
 |---|---|---|
@@ -53,10 +55,12 @@ The following assignments are transcribed from the supplied wiring diagram. Conf
 **Speaker connections:**
 - Speaker (+) → MAX98357A `SPK+`
 - Speaker (−) → MAX98357A `SPK−`
+<img width="740" height="1320" alt="Analysis output 1 (1)" src="https://github.com/user-attachments/assets/e3f5e9d4-2e4d-4aab-9e25-116f2e7b055d" />
 
 Do **not** connect either speaker output to ESP32 GND. The speaker connects to the amplifier, not directly to ESP32 GPIO pins.
 
 ### 3. OLED Display – 0.96-inch, 128×64
+<img width="750" height="500" alt="oled" src="https://github.com/user-attachments/assets/d92776a9-e807-490f-8397-ad90452c7c76" />
 
 | OLED pin | ESP32 connection | Function |
 |---|---|---|
@@ -113,6 +117,7 @@ After checking the ground wiring, add power connections.
 Do not assume the ESP32 3.3V regulator can supply the amplifier's peak current. Use an appropriate regulated supply if required, connect supply grounds together, and check the exact breakout-board documentation.
 
 ## 🟡 Stage 3 – Signal Connections
+<img width="850" height="941" alt="esp" src="https://github.com/user-attachments/assets/2224c2f4-ea00-4964-b5c8-356d1d482f43" />
 
 | Signal | ESP32 GPIO |
 |---|---:|
