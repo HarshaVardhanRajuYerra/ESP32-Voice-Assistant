@@ -1,4 +1,4 @@
-# 🤖 CHATBOT A.I XIAOZHI – ESP32 Voice Assistant
+# 🤖  A.I ESP32 Voice Assistant
 
 An ESP32-based voice assistant prototype using an INMP441 digital microphone, MAX98357A audio amplifier, speaker, and 0.96-inch OLED display.
 
@@ -181,7 +181,7 @@ XIAOZHI-ESP32-VOICE-ASSISTANT/
 
 Build a compact ESP32-based AI voice assistant that can listen to a user, send voice input for AI processing, respond through a speaker, and display useful status information on an OLED screen.
 
-**Project name:** CHATBOT A.I XIAOZHI  
+**Project name:** BUDDY 
 **Controller:** ESP32 DevKit V1 (ESP32-WROOM-32)  
 **Audio input:** INMP441  
 **Audio output:** MAX98357A + 4Ω, 3W speaker  
